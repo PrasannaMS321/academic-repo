@@ -15,9 +15,9 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Connect to Local MongoDB
-mongoose.connect('mongodb://127.0.0.1:27017/academic_repo')
-    .then(() => console.log("✅ Connected to MongoDB Locally"))
+// Connect to MongoDB Atlas
+mongoose.connect('mongodb+srv://guest123:guest123@cluster0.a1iay2y.mongodb.net/academic_repo?retryWrites=true&w=majority')
+    .then(() => console.log("✅ Connected to MongoDB Atlas"))
     .catch(err => console.error("❌ Connection error", err));
 
 // Test Route
@@ -179,12 +179,19 @@ app.post('/login', (req, res) => {
     const { email, password } = req.body;
 
     UserModel.findOne({email: email})
-    .then(user => {
+    // 👇 FIX: Added "async" right here!
+    .then(async user => { 
         if(user){
             if(user.password === password){
+                
+                // 👇 Now await will work perfectly here
+                user.lastLog = new Date();
+                await user.save();
+
                 res.json({
                     status:"Success",
-                    user: user
+                    user: user,
+                    role: user.role
                 });
             } 
             else {
@@ -206,6 +213,17 @@ app.post('/register', (req, res) => {
             console.error(err);
             res.status(500).json(err);
         })
+});
+
+app.get("/get-users", async (req, res) => {
+    try {
+        // Find all users, but exclude their passwords for security
+        const users = await UserModel.find({}, { password: 0 });
+        res.json({ status: "Success", data: users });
+    } catch (err) {
+        console.error("Fetch Users Error:", err);
+        res.status(500).json({ status: "Error", error: err.message });
+    }
 });
 
 //Exception Handling
