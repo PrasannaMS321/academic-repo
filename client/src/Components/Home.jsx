@@ -27,7 +27,7 @@ function Home() {
 
   // --- 2. FETCH & CALCULATE STATS ---
   useEffect(() => {
-    axios.get('http://localhost:5000/get-files-data')
+    axios.get('https://academic-repo-evrb.onrender.com/get-files-data')
       .then(result => {
         if(result.data.status === "Success") {
           const allDocs = result.data.data;

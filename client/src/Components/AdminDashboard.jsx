@@ -38,7 +38,7 @@ function AdminDashboard() {
 
   const fetchGlobalData = () => {
     setIsLoading(true);
-    axios.get('http://localhost:5000/get-files-data')
+    axios.get('https://academic-repo-evrb.onrender.com/get-files-data')
       .then(result => {
         if(result.data.status === "Success") {
           const allDocs = result.data.data;
@@ -66,7 +66,7 @@ function AdminDashboard() {
   // --- 3. GLOBAL DELETE ---
   const handleAdminDelete = (id) => {
     if(window.confirm("ADMIN ACTION: Are you sure you want to permanently delete this user's file from the server?")) {
-      axios.post('http://localhost:5000/delete-file', { doc_id: id })
+      axios.post('https://academic-repo-evrb.onrender.com/delete-file', { doc_id: id })
         .then(result => {
           if (result.data.status === "Success") {
             showToast("Document deleted globally.", "success");

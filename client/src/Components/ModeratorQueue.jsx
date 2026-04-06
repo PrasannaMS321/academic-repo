@@ -20,7 +20,7 @@ function ModeratorQueue() {
 
     const fetchPendingFiles = () => {
         setIsLoading(true);
-        axios.get('http://localhost:5000/get-pending-files')
+        axios.get('https://academic-repo-evrb.onrender.com/get-pending-files')
             .then(res => {
                 if (res.data.status === "Success") setPendingFiles(res.data.data);
                 setIsLoading(false);
@@ -29,7 +29,7 @@ function ModeratorQueue() {
     };
 
     const handleApprove = (id) => {
-        axios.put(`http://localhost:5000/approve-file/${id}`)
+        axios.put(`https://academic-repo-evrb.onrender.com/approve-file/${id}`)
             .then(res => {
                 if(res.data.status === "Success") {
                     // Remove it from the pending list UI
@@ -40,7 +40,7 @@ function ModeratorQueue() {
 
     const handleReject = (id) => {
         if(window.confirm("Reject and delete this file permanently?")) {
-            axios.post(`http://localhost:5000/delete-file`, { doc_id: id })
+            axios.post(`https://academic-repo-evrb.onrender.com/delete-file`, { doc_id: id })
                 .then(res => {
                     if(res.data.status === "Success") {
                         setPendingFiles(prev => prev.filter(file => file.id !== id));

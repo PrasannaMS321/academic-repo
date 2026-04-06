@@ -49,7 +49,7 @@ function MyLibrary() {
     // Stop if user is not loaded yet
     if (!user || !user.email) return; 
 
-    axios.get('http://localhost:5000/get-files-data')
+    axios.get('https://academic-repo-evrb.onrender.com/get-files-data')
       .then(result => {
         if (result.data.status === "Success") {
           // 3. FIX: Filter using the correct user email
@@ -82,7 +82,7 @@ function MyLibrary() {
   // --- ACTIONS ---
   const handleDelete = (id) => {
     if(window.confirm("Are you sure you want to permanently delete this file?")) {
-      axios.post('http://localhost:5000/delete-file', { doc_id: id })
+      axios.post('https://academic-repo-evrb.onrender.com/delete-file', { doc_id: id })
         .then(result => {
           if (result.data.status === "Success") {
             setMyDocuments(prev => prev.filter(doc => doc.id !== id));
@@ -105,7 +105,7 @@ function MyLibrary() {
   const saveEdit = () => {
     if(!editTitle.trim()) return showToast("Title cannot be empty", "error");
     setIsSaving(true);
-    axios.put(`http://localhost:5000/edit-file/${editingDoc.id}`, { 
+    axios.put(`https://academic-repo-evrb.onrender.com/edit-file/${editingDoc.id}`, { 
         title: editTitle, 
         tag: editTag, 
         semester: editSem

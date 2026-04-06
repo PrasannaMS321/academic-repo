@@ -13,7 +13,7 @@ function Login() {
 
   // --- NEW: Ping server on page load ---
   useEffect(() => {
-    axios.get('http://localhost:5000/')
+    axios.get('https://academic-repo-evrb.onrender.com/')
       .then(() => setServerStatus('online'))
       .catch(() => setServerStatus('offline'));
   }, []);
@@ -21,7 +21,7 @@ function Login() {
   // Handle Login
   const handleSubmit = (e) => {
     e.preventDefault();
-    axios.post('http://localhost:5000/login', { email, password })
+    axios.post('https://academic-repo-evrb.onrender.com/login', { email, password })
       .then(result => {
         if (result.data.status === "Success") {
           localStorage.setItem("user", JSON.stringify(result.data.user));

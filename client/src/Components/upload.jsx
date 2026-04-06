@@ -37,7 +37,7 @@ function StaffUpload() {
         formData.append("tag", tag);
 
         try {
-            const res = await axios.post('http://localhost:5000/upload/file', formData, {
+            const res = await axios.post('https://academic-repo-evrb.onrender.com/upload/file', formData, {
                 headers: { "Content-Type": "multipart/form-data" }
             });
             

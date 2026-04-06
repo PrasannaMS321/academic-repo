@@ -44,7 +44,7 @@ function AdminArchive() {
 
   // --- FETCH ALL DATA ---
   useEffect(() => {
-    axios.get('http://localhost:5000/get-files-data')
+    axios.get('https://academic-repo-evrb.onrender.com/get-files-data')
       .then(result => {
         if(result.data.status === "Success") {
           setDocuments(result.data.data); 
@@ -98,7 +98,7 @@ function AdminArchive() {
   // --- ADMIN ACTIONS ---
   const handleDelete = (id) => {
     if(window.confirm("ADMIN ACTION: Are you sure you want to permanently delete this file from the server?")) {
-      axios.post('http://localhost:5000/delete-file', { doc_id: id })
+      axios.post('https://academic-repo-evrb.onrender.com/delete-file', { doc_id: id })
         .then(result => {
           if (result.data.status === "Success") {
             setDocuments(prev => prev.filter(doc => doc.id !== id));
@@ -122,7 +122,7 @@ function AdminArchive() {
 
       for (const id of selectedDocs) {
           try {
-              const res = await axios.post('http://localhost:5000/delete-file', { doc_id: id });
+              const res = await axios.post('https://academic-repo-evrb.onrender.com/delete-file', { doc_id: id });
               if (res.data.status === "Success") {
                   successCount++;
                   successfullyDeletedIds.push(id);
@@ -157,7 +157,7 @@ function AdminArchive() {
   const saveEdit = () => {
     if(!editTitle.trim()) return showToast("Title cannot be empty", "error");
     setIsSaving(true);
-    axios.put(`http://localhost:5000/edit-file/${editingDoc.id}`, { 
+    axios.put(`https://academic-repo-evrb.onrender.com/edit-file/${editingDoc.id}`, { 
         title: editTitle, 
         tag: editTag, 
         semester: editSem

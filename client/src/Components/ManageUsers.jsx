@@ -46,8 +46,8 @@ function ManageUsers() {
     setIsLoading(true);
     try {
         const [usersRes, docsRes] = await Promise.all([
-            axios.get('http://localhost:5000/get-users'),
-            axios.get('http://localhost:5000/get-files-data')
+            axios.get('https://academic-repo-evrb.onrender.com/get-users'),
+            axios.get('https://academic-repo-evrb.onrender.com/get-files-data')
         ]);
 
         if (usersRes.data.status === "Success" && docsRes.data.status === "Success") {
@@ -131,7 +131,7 @@ function ManageUsers() {
       if (!newUser.name || !newUser.email || !newUser.password) return showToast("Missing fields", "error");
       
       setIsSubmitting(true);
-      axios.post('http://localhost:5000/register', newUser)
+      axios.post('https://academic-repo-evrb.onrender.com/register', newUser)
         .then(result => {
             showToast(`Account created for ${newUser.name}`, "success");
             setShowAddModal(false);
@@ -150,7 +150,7 @@ function ManageUsers() {
 
   // --- UPDATE USER PROFILE ---
   const handleUpdateUser = () => {
-      axios.put(`http://localhost:5000/edit-user/${selectedUser.email}`, userEditData)
+      axios.put(`https://academic-repo-evrb.onrender.com/edit-user/${selectedUser.email}`, userEditData)
           .then(res => {
               if(res.data.status === "Success") {
                   showToast("User profile updated", "success");
@@ -165,7 +165,7 @@ function ManageUsers() {
   // --- DELETE USER ACCOUNT ---
   const handleDeleteUser = () => {
       if(window.confirm(`WARNING: Are you sure you want to permanently delete the account for ${selectedUser.name}?`)) {
-          axios.post('http://localhost:5000/delete-user', { email: selectedUser.email })
+          axios.post('https://academic-repo-evrb.onrender.com/delete-user', { email: selectedUser.email })
               .then(res => {
                   if(res.data.status === "Success") {
                       showToast("User account deleted", "success");
@@ -180,7 +180,7 @@ function ManageUsers() {
   // --- DOC ACTIONS (Inside User Modal) ---
   const handleDeleteDoc = (id) => {
       if(window.confirm("Permanently delete this file?")) {
-          axios.post('http://localhost:5000/delete-file', { doc_id: id })
+          axios.post('https://academic-repo-evrb.onrender.com/delete-file', { doc_id: id })
               .then(res => {
                   if (res.data.status === "Success") {
                       showToast("File deleted", "success");
@@ -191,7 +191,7 @@ function ManageUsers() {
   };
 
   const handleUpdateDoc = () => {
-      axios.put(`http://localhost:5000/edit-file/${editingDoc.id}`, docEditData)
+      axios.put(`https://academic-repo-evrb.onrender.com/edit-file/${editingDoc.id}`, docEditData)
           .then(res => {
               if (res.data.status === "Success") {
                   showToast("File updated", "success");
