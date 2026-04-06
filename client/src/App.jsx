@@ -7,6 +7,9 @@ import Home from './Components/Home';
 import Upload from './Components/upload';
 import MyLibrary from './Components/library';
 import SharedHub from './Components/SharedHub';
+import AdminDashboard from './Components/AdminDashboard';
+import ManageUsers from './Components/ManageUsers';
+import AdminArchive from './Components/AdminArchive';
 
 function App() {
   
@@ -14,12 +17,18 @@ function App() {
     <div>
       <BrowserRouter>
         <Routes>
+          <Route path='/' element={ <Login/> } />
           <Route path='/login' element={ <Login/> } />
           <Route path='/register' element={ <Register/> } />
           <Route path='/home' element={ <Home/> } />
           <Route path='/upload' element={ <Upload/> } />
           <Route path='/library' element={ <MyLibrary/> }/>
           <Route path='/shared-hub' element= {<SharedHub/> } />
+
+          {/*Admin*/}
+          <Route path='/AdminDash' element={<AdminDashboard/>} />
+          <Route path='/ManageUsers' element={<ManageUsers/>} />
+          <Route path='/AdminArchive' element={<AdminArchive/>} />
         </Routes>
       </BrowserRouter>
     </div>

@@ -1,5 +1,5 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
@@ -8,6 +8,16 @@ function Login() {
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
+  // --- NEW: Server Status State ---
+  const [serverStatus, setServerStatus] = useState('checking'); // 'checking', 'online', 'offline'
+
+  // --- NEW: Ping server on page load ---
+  useEffect(() => {
+    axios.get('http://localhost:5000/')
+      .then(() => setServerStatus('online'))
+      .catch(() => setServerStatus('offline'));
+  }, []);
+
   // Handle Login
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -15,16 +25,25 @@ function Login() {
       .then(result => {
         if (result.data.status === "Success") {
           localStorage.setItem("user", JSON.stringify(result.data.user));
-          navigate("/home");
+          if (result.data.role === "admin") navigate("/AdminDash");
+          else navigate("/home");
+        } else {
+          alert(result.data.message); // Added simple alert for wrong password/user
         }
       })
-      .catch(err => console.log(err));
+      .catch(err => {
+        console.log(err);
+        // If the request completely fails (Network Error), update status to offline
+        if (err.message === 'Network Error') {
+            setServerStatus('offline');
+        }
+      });
   };
 
   return (
     <div className="container-fluid min-vh-100 d-flex align-items-center justify-content-center" 
          style={{ 
-           // SWITCHED TO: Deep Royal Navy (Softer than black, very professional)
+           // Deep Royal Navy (Softer than black, very professional)
            background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)',
            color: '#fff',
            fontFamily: 'system-ui, -apple-system, sans-serif'
@@ -60,6 +79,12 @@ function Login() {
           transform: translateY(-1px);
           box-shadow: 0 10px 20px -5px rgba(37, 99, 235, 0.4);
         }
+        .glossy-button:disabled {
+          background: #475569;
+          cursor: not-allowed;
+          box-shadow: none;
+          transform: none;
+        }
         .right-panel-gradient {
            background: linear-gradient(to bottom right, rgba(59, 130, 246, 0.1), transparent),
                        linear-gradient(to top left, rgba(30, 41, 59, 0.5), transparent);
@@ -67,13 +92,13 @@ function Login() {
       `}</style>
 
       <div className="card glossy-card rounded-4 overflow-hidden border-0" 
-           style={{ maxWidth: '1000px', width: '90%' }}>
+            style={{ maxWidth: '1000px', width: '90%' }}>
         
         <div className="row g-0">
           
           {/* LEFT SIDE: Login Form */}
           <div className="col-lg-6 p-5 d-flex flex-column justify-content-center"
-               style={{ position: 'relative', zIndex: 2 }}>
+                style={{ position: 'relative', zIndex: 2 }}>
             
             <div className="mb-5">
               <div className="d-flex align-items-center mb-3">
@@ -148,8 +173,9 @@ function Login() {
               <button 
                 type="submit" 
                 className="btn w-100 py-3 fw-bold rounded-3 glossy-button text-white"
+                disabled={serverStatus === 'offline'} // Disable button if server is dead
               >
-                Sign In
+                {serverStatus === 'offline' ? 'Server Offline' : 'Sign In'}
               </button>
             </form>
 
@@ -180,13 +206,21 @@ function Login() {
                 This is a private repository. Access is limited to authorized members only.
               </p>
 
-              {/* Minimal Status Indicators - No huge numbers */}
+              {/* Minimal Status Indicators */}
               <div className="d-flex flex-column gap-2 w-100">
+                
+                {/* --- DYNAMIC SERVER STATUS INDICATOR --- */}
                 <div className="px-3 py-2 rounded-2 d-flex align-items-center justify-content-center gap-2" 
                      style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.05)' }}>
-                  <div style={{ width: '6px', height: '6px', background: '#10b981', borderRadius: '50%' }}></div>
-                  <span className="small text-white-50" style={{ fontSize: '0.75rem' }}>System Online</span>
+                  <div style={{ 
+                      width: '6px', height: '6px', borderRadius: '50%',
+                      background: serverStatus === 'online' ? '#10b981' : serverStatus === 'checking' ? '#f59e0b' : '#ef4444' 
+                  }}></div>
+                  <span className="small text-white-50" style={{ fontSize: '0.75rem' }}>
+                    {serverStatus === 'online' ? 'System Online' : serverStatus === 'checking' ? 'Connecting...' : 'System Offline'}
+                  </span>
                 </div>
+
                 <div className="px-3 py-2 rounded-2 d-flex align-items-center justify-content-center gap-2" 
                      style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.05)' }}>
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" strokeWidth="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>

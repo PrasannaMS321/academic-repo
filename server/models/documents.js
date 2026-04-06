@@ -18,7 +18,10 @@ const DocumentSchema = new mongoose.Schema({
     role: { type: String, default: "Student" },      // e.g. "Staff"
 
     // --- 3. Tracking ---
-    uploadDate: { type: Date, default: Date.now }
+    uploadDate: { type: Date, default: Date.now },
+
+    // --- 4. Approve ---
+    status: { type: String, default: "pending" }
 });
 
 const DocumentsModel = mongoose.model("documents", DocumentSchema);
