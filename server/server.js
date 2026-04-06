@@ -101,7 +101,7 @@ app.get("/get-files-data", async (req, res) => {
                 tag: doc.tag || doc.subject || "General",
 
                 // 👉 ADD THIS: The frontend needs this to download the file!
-                filePath: `http://localhost:5000/${doc.path.replace(/\\/g, "/")}` 
+                filePath: `https://academic-repo-evrb.onrender.com/${doc.path.replace(/\\/g, "/")}` 
             };
         });
 
