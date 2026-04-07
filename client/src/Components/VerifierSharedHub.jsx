@@ -9,6 +9,24 @@ function VerifierSharedHub() {
   const [filterSem, setFilterSem] = useState('All');
   const [documents, setDocuments] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [toast, setToast] = useState({ show: false, msg: '', type: 'success' });
+
+  const showToast = (msg, type = 'success') => {
+    setToast({ show: true, msg, type });
+    setTimeout(() => setToast({ ...toast, show: false }), 3000);
+  };
+
+  const handleDelete = (id, title) => {
+    if(window.confirm(`Are you sure you want to permanently delete "${title}"?`)) {
+      axios.post('https://academic-repo-evrb.onrender.com/delete-file', { doc_id: id })
+        .then(res => {
+          if(res.data.status === "Success") {
+            setDocuments(prev => prev.filter(doc => doc.id !== id));
+            showToast("Document deleted successfully.", "success");
+          }
+        });
+    }
+  };
 
   // --- FETCH VERIFIED DATA ---
   useEffect(() => {
@@ -56,6 +74,17 @@ function VerifierSharedHub() {
       <style>{`
         .text-soft { color: #94a3b8 !important; }
         .text-main { color: #e2e8f0 !important; }
+
+        .toast-custom {
+          position: fixed; bottom: 30px; right: 30px; z-index: 2000;
+          background: #1e293b; color: white;
+          padding: 1rem 1.5rem; border-radius: 8px;
+          border-left: 4px solid #a855f7;
+          box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+          animation: slideIn 0.3s ease-out;
+        }
+        .toast-custom.error { border-left-color: #ef4444; }
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
 
         .glass-panel {
           background: rgba(30, 41, 59, 0.5);
@@ -106,6 +135,12 @@ function VerifierSharedHub() {
       `}</style>
 
       <VerifierNavbar />
+
+      {toast.show && (
+        <div className={`toast-custom ${toast.type}`}>
+          <span className="fw-medium">{toast.msg}</span>
+        </div>
+      )}
 
       <div className="container py-5">
         
@@ -216,20 +251,36 @@ function VerifierSharedHub() {
                         <td className="small text-soft">{doc.date}</td>
 
                         <td className="text-end">
-                          <button 
-                            className="btn btn-sm d-inline-flex align-items-center gap-2"
-                            style={{
-                              border: '1px solid rgba(168, 85, 247, 0.3)', 
-                              color: '#c084fc', 
-                              background: 'rgba(168, 85, 247, 0.1)',
-                              fontSize: '0.8rem',
-                              padding: '0.4rem 0.8rem'
-                            }}
-                            onClick={() => window.open(`${doc.filePath}?name=${encodeURIComponent(filename)}`, '_blank')}
-                          >
-                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-                             Download
-                          </button>
+                          <div className="d-flex gap-2 justify-content-end">
+                            <button 
+                              className="btn btn-sm d-inline-flex align-items-center gap-2"
+                              style={{
+                                border: '1px solid rgba(168, 85, 247, 0.3)', 
+                                color: '#c084fc', 
+                                background: 'rgba(168, 85, 247, 0.1)',
+                                fontSize: '0.8rem',
+                                padding: '0.4rem 0.8rem'
+                              }}
+                              onClick={() => window.open(`${doc.filePath}?name=${encodeURIComponent(filename)}`, '_blank')}
+                            >
+                               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                               Download
+                            </button>
+                            <button 
+                              className="btn btn-sm d-inline-flex align-items-center gap-2"
+                              style={{
+                                border: '1px solid rgba(239, 68, 68, 0.3)', 
+                                color: '#f87171', 
+                                background: 'rgba(239, 68, 68, 0.1)',
+                                fontSize: '0.8rem',
+                                padding: '0.4rem 0.8rem'
+                              }}
+                              onClick={() => handleDelete(doc.id, doc.title)}
+                              title="Delete this document"
+                            >
+                               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     );

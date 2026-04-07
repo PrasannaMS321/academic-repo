@@ -11,7 +11,7 @@ import AdminDashboard from './Components/AdminDashboard';
 import ManageUsers from './Components/ManageUsers';
 import AdminArchive from './Components/AdminArchive';
 import VerifierDashboard from './Components/VerifierDashboard';
-import ModeratorQueue from './Components/ModeratorQueue';
+import VerifierQueue from './Components/VerifierQueue';
 import VerifierSharedHub from './Components/VerifierSharedHub';
 
 function App() {
@@ -35,7 +35,7 @@ function App() {
 
           {/*Verifier*/}
           <Route path='/verifier-dash' element={<VerifierDashboard/>} />
-          <Route path='/verifier-queue' element={<ModeratorQueue/>} />
+          <Route path='/verifier-queue' element={<VerifierQueue/>} />
           <Route path='/verifier-hub' element={<VerifierSharedHub/>} />
         </Routes>
       </BrowserRouter>

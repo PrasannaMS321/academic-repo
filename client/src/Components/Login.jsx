@@ -26,6 +26,7 @@ function Login() {
         if (result.data.status === "Success") {
           localStorage.setItem("user", JSON.stringify(result.data.user));
           if (result.data.role === "admin") navigate("/AdminDash");
+          else if (result.data.role === "verifier") navigate("/verifier-dash");
           else navigate("/home");
         } else {
           alert(result.data.message); // Added simple alert for wrong password/user
