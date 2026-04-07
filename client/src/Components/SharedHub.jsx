@@ -12,7 +12,7 @@ function SharedHub() {
 
   // --- FETCH DATA ---
   useEffect(() => {
-    axios.get('http://localhost:5000/get-files-data')
+    axios.get('https://academic-repo-evrb.onrender.com/get-files-data')
       .then(result => {
         if(result.data.status === "Success") {
           setDocuments(result.data.data);
