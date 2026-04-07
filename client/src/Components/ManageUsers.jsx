@@ -381,7 +381,12 @@ function ManageUsers() {
                         </td>
                         <td className="text-soft font-monospace" style={{fontSize: '0.85rem'}}>{u.email}</td>
                         <td className="text-center">
-                            <span className="badge rounded-pill fw-medium px-3 py-1" style={{background: u.role === 'admin' ? 'rgba(239, 68, 68, 0.1)' : 'rgba(59, 130, 246, 0.1)', color: u.role === 'admin' ? '#fca5a5' : '#93c5fd', border: u.role === 'admin' ? '1px solid rgba(239, 68, 68, 0.2)' : '1px solid rgba(59, 130, 246, 0.2)', fontSize: '0.7rem', letterSpacing: '0.5px'}}>
+                            <span className="badge rounded-pill fw-medium px-3 py-1" style={{
+                                background: u.role === 'admin' ? 'rgba(239, 68, 68, 0.1)' : u.role === 'verifier' ? 'rgba(139, 92, 246, 0.1)' : 'rgba(59, 130, 246, 0.1)', 
+                                color: u.role === 'admin' ? '#fca5a5' : u.role === 'verifier' ? '#c084fc' : '#93c5fd', 
+                                border: u.role === 'admin' ? '1px solid rgba(239, 68, 68, 0.2)' : u.role === 'verifier' ? '1px solid rgba(139, 92, 246, 0.2)' : '1px solid rgba(59, 130, 246, 0.2)', 
+                                fontSize: '0.7rem', letterSpacing: '0.5px'
+                            }}>
                                 {u.role ? u.role.toUpperCase() : 'STUDENT'}
                             </span>
                         </td>
