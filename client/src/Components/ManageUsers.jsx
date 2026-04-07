@@ -325,6 +325,7 @@ function ManageUsers() {
                         <select className="form-select control-input rounded-3" style={{width: '150px'}} value={filterRole} onChange={(e) => setFilterRole(e.target.value)}>
                             <option value="All">All Roles</option>
                             <option value="admin">Administrator</option>
+                            <option value="verifier">Verifier</option>
                             <option value="student">Student</option>
                         </select>
                     </div>
@@ -437,6 +438,7 @@ function ManageUsers() {
                         <select className="form-select control-input" value={userEditData.role} onChange={(e) => setUserEditData({...userEditData, role: e.target.value})}>
                             <option value="student">Student</option>
                             <option value="admin">Administrator</option>
+                            <option value="verifier">Verifier</option>
                         </select>
                     </div>
                     <div className="mb-4">
@@ -543,6 +545,7 @@ function ManageUsers() {
                                 value={newUser.role} onChange={(e) => setNewUser({...newUser, role: e.target.value})}>
                             <option value="student">Student</option>
                             <option value="admin">Administrator</option>
+                            <option value="verifier">Verifier</option>
                         </select>
                     </div>
                     <div className="col-md-6">
