@@ -84,10 +84,10 @@ app.post("/upload/file", upload.single("file"), async (req, res) => {
     }
 });
 
-//GET Files Data:
+//GET Files Data (Only Approved):
 app.get("/get-files-data", async (req, res) => {
     try {
-        const rawDocs = await DocumentsModel.find({});
+        const rawDocs = await DocumentsModel.find({ status: "approved" });
 
         //Format Raw Data
         const formattedDocs = rawDocs.map(doc => {
@@ -109,6 +109,86 @@ app.get("/get-files-data", async (req, res) => {
 
     } catch (err) {
         console.error("Fetch Error:", err);
+        res.status(500).json({ status: "Error", error: err.message });
+    }
+});
+
+//GET Pending Files (For Verifiers):
+app.get("/get-pending-files", async (req, res) => {
+    try {
+        const rawDocs = await DocumentsModel.find({ status: "pending" }).sort({ uploadDate: -1 });
+
+        //Format Raw Data
+        const formattedDocs = rawDocs.map(doc => {
+            return {
+                id: doc._id,
+                title: doc.title || "Untitled Document",
+                author: doc.uploaderEmail || "Unknown",
+                date: doc.uploadDate ? new Date(doc.uploadDate).toISOString().split('T')[0] : "Unknown Date",
+                type: doc.extension ? doc.extension.replace('.', '').toUpperCase() : "FILE",
+                size: doc.size ? (doc.size / (1024 * 1024)).toFixed(1) + " MB" : "0 MB",
+                tag: doc.tag || doc.subject || "General",
+                semester: doc.semester,
+                filePath: `https://academic-repo-evrb.onrender.com/${doc.path.replace(/\\/g, "/")}`
+            };
+        });
+
+        res.json({ status: "Success", data: formattedDocs });
+
+    } catch (err) {
+        console.error("Fetch Pending Error:", err);
+        res.status(500).json({ status: "Error", error: err.message });
+    }
+});
+
+//GET User's Own Files (All statuses for My Library):
+app.get("/get-user-files/:email", async (req, res) => {
+    try {
+        const email = req.params.email;
+        const rawDocs = await DocumentsModel.find({ uploaderEmail: email }).sort({ uploadDate: -1 });
+
+        const formattedDocs = rawDocs.map(doc => {
+            return {
+                id: doc._id,
+                title: doc.title || "Untitled Document",
+                author: doc.uploaderEmail || "Unknown",
+                date: doc.uploadDate ? new Date(doc.uploadDate).toISOString().split('T')[0] : "Unknown Date",
+                type: doc.extension ? doc.extension.replace('.', '').toUpperCase() : "FILE",
+                size: doc.size ? (doc.size / (1024 * 1024)).toFixed(1) + " MB" : "0 MB",
+                tag: doc.tag || doc.subject || "General",
+                semester: doc.semester,
+                status: doc.status || "pending",
+                filePath: `https://academic-repo-evrb.onrender.com/${doc.path.replace(/\\/g, "/")}`
+            };
+        });
+
+        res.json({ status: "Success", data: formattedDocs });
+
+    } catch (err) {
+        console.error("Fetch User Files Error:", err);
+        res.status(500).json({ status: "Error", error: err.message });
+    }
+});
+
+//Approve File (Verifier Action):
+app.put("/approve-file/:id", async (req, res) => {
+    try {
+        const documentId = req.params.id;
+        
+        const updatedDoc = await DocumentsModel.findByIdAndUpdate(
+            documentId, 
+            { status: "approved" },
+            { new: true }
+        );
+
+        if (!updatedDoc) {
+            return res.status(404).json({ status: "Error", message: "Document not found." });
+        }
+
+        res.json({ status: "Success", message: "Document approved and published!", data: updatedDoc });
+
+    } catch (err) {
+        console.error("Approve Error:", err);
         res.status(500).json({ status: "Error", error: err.message });
     }
 });

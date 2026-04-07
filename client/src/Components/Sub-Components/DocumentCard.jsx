@@ -43,9 +43,21 @@ function DocumentCard({ doc, onEdit, onDelete }) {
         >
         
         <div className="d-flex justify-content-between align-items-start mb-4">
-          <div className="d-flex align-items-center justify-content-center" 
-               style={{ width: '42px', height: '42px', backgroundColor: '#1e293b', borderRadius: '10px', border: `1px solid ${typeColor}30` }}>
-            <span className="fw-bold" style={{ color: typeColor, fontSize: '0.8rem', letterSpacing: '0.5px' }}>{doc.type}</span>
+          <div className="d-flex align-items-center gap-2">
+            <div className="d-flex align-items-center justify-content-center" 
+                 style={{ width: '42px', height: '42px', backgroundColor: '#1e293b', borderRadius: '10px', border: `1px solid ${typeColor}30` }}>
+              <span className="fw-bold" style={{ color: typeColor, fontSize: '0.8rem', letterSpacing: '0.5px' }}>{doc.type}</span>
+            </div>
+            {/* Verification Status Indicator */}
+            {doc.status && (
+              <span title={doc.status === "approved" ? "Verified" : "Pending Review"}>
+                {doc.status === "approved" ? (
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="2.5" style={{filter: 'drop-shadow(0 0 4px rgba(16, 185, 129, 0.4))'}}><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                ) : (
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="2.5"><circle cx="12" cy="12" r="10"></circle></svg>
+                )}
+              </span>
+            )}
           </div>
           <span className="badge px-3 py-2 fw-medium" style={{ backgroundColor: '#1e293b', color: '#94a3b8', border: '1px solid rgba(255, 255, 255, 0.05)', borderRadius: '6px' }}>
             {doc.tag === "common" ? "General": doc.tag}

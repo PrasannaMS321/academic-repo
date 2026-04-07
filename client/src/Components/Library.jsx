@@ -49,12 +49,10 @@ function MyLibrary() {
     // Stop if user is not loaded yet
     if (!user || !user.email) return; 
 
-    axios.get('https://academic-repo-evrb.onrender.com/get-files-data')
+    axios.get(`https://academic-repo-evrb.onrender.com/get-user-files/${encodeURIComponent(user.email)}`)
       .then(result => {
         if (result.data.status === "Success") {
-          // 3. FIX: Filter using the correct user email
-          const userDocs = result.data.data.filter(doc => doc.author === user.email);
-          setMyDocuments(userDocs);
+          setMyDocuments(result.data.data);
         }
         setIsLoading(false);
       })
