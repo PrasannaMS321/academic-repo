@@ -11,7 +11,7 @@ function ModeratorQueue() {
     // Security Check: Only moderators (or admins) allowed
     useEffect(() => {
         const storedUser = JSON.parse(localStorage.getItem("user"));
-        if (!storedUser || (storedUser.role !== "moderator" && storedUser.role !== "admin")) {
+        if (!storedUser || (storedUser.role !== "moderator" && storedUser.role !== "admin" && storedUser.role !== "verifier")) {
             navigate('/login');
         } else {
             fetchPendingFiles();
