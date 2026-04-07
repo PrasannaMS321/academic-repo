@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {BrowserRouter, Routes, Route} from 'react-router-dom';
-import Register from './Components/register';
-import Login from './Components/login';
+import Register from './Components/Register';
+import Login from './Components/Login';
 import Home from './Components/Home';
 import Upload from './Components/upload';
-import MyLibrary from './Components/library';
+import MyLibrary from './Components/Library';
 import SharedHub from './Components/SharedHub';
 import AdminDashboard from './Components/AdminDashboard';
 import ManageUsers from './Components/ManageUsers';
